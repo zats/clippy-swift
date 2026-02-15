@@ -1,8 +1,7 @@
-# clippy-swift
+![](preview.gif)
 
 Prebuilt Office Assistant animations (Clippy, Cat, Rocky) for Swift apps.
 
-You drive a single `AssistantAnimation` model and render it with `AssistantAnimationPlayer`.
 
 ## Example
 
