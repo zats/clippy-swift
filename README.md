@@ -1,3 +1,5 @@
+# ClippySwift
+
 ![](preview.gif)
 
 Prebuilt Office Assistant animations (Clippy, Cat, Rocky) for Swift apps.
