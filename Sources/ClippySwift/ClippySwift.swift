@@ -1,6 +1,6 @@
 import Foundation
 
-public enum AssistantsError: LocalizedError {
+public enum ClippySwiftError: LocalizedError {
     case emptyFrames
     case unsupportedPlatform(String)
     case decodeFailed(String)

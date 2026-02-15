@@ -1,7 +1,7 @@
 import XCTest
-@testable import Assistants
+@testable import ClippySwift
 
-final class AssistantsTests: XCTestCase {
+final class ClippySwiftTests: XCTestCase {
     func testPlayerLoopsInsideCurrentAnimation() throws {
         let frame = AssistantFrame(
             index: 0,

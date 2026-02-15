@@ -13,13 +13,13 @@ final class AssistantFramePlayer {
 
     init(manifest: AssistantManifest, initialAnimationName: String? = nil) throws {
         guard !manifest.frames.isEmpty else {
-            throw AssistantsError.emptyFrames
+            throw ClippySwiftError.emptyFrames
         }
         self.manifest = manifest
 
         if let initialAnimationName {
             guard manifest.animations.contains(where: { $0.name == initialAnimationName }) else {
-                throw AssistantsError.invalidInput("Unknown animation name '\(initialAnimationName)'.")
+                throw ClippySwiftError.invalidInput("Unknown animation name '\(initialAnimationName)'.")
             }
             self.currentAnimationName = initialAnimationName
         } else if let firstAnimation = manifest.animations.first {
@@ -32,7 +32,7 @@ final class AssistantFramePlayer {
         }
 
         guard let animation = self.animation(named: self.currentAnimationName) else {
-            throw AssistantsError.invalidInput("Unable to initialize animation player.")
+            throw ClippySwiftError.invalidInput("Unable to initialize animation player.")
         }
         self.currentGlobalFrameIndex = animation.startFrame
     }
@@ -55,7 +55,7 @@ final class AssistantFramePlayer {
 
     func play(named name: String, restart: Bool = true) throws {
         guard let animation = self.animation(named: name) else {
-            throw AssistantsError.invalidInput("Unknown animation name '\(name)'.")
+            throw ClippySwiftError.invalidInput("Unknown animation name '\(name)'.")
         }
 
         currentAnimationName = name

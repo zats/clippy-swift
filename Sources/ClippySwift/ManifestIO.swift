@@ -6,13 +6,13 @@ public enum AssistantManifestIO {
         do {
             data = try Data(contentsOf: url)
         } catch {
-            throw AssistantsError.ioFailed("Unable to read manifest at \(url.path): \(error.localizedDescription)")
+            throw ClippySwiftError.ioFailed("Unable to read manifest at \(url.path): \(error.localizedDescription)")
         }
 
         do {
             return try JSONDecoder().decode(AssistantManifest.self, from: data)
         } catch {
-            throw AssistantsError.decodeFailed("Unable to decode manifest at \(url.path): \(error.localizedDescription)")
+            throw ClippySwiftError.decodeFailed("Unable to decode manifest at \(url.path): \(error.localizedDescription)")
         }
     }
 
@@ -23,13 +23,13 @@ public enum AssistantManifestIO {
         do {
             data = try encoder.encode(manifest)
         } catch {
-            throw AssistantsError.encodeFailed("Unable to encode manifest: \(error.localizedDescription)")
+            throw ClippySwiftError.encodeFailed("Unable to encode manifest: \(error.localizedDescription)")
         }
 
         do {
             try data.write(to: url, options: .atomic)
         } catch {
-            throw AssistantsError.ioFailed("Unable to write manifest at \(url.path): \(error.localizedDescription)")
+            throw ClippySwiftError.ioFailed("Unable to write manifest at \(url.path): \(error.localizedDescription)")
         }
     }
 }

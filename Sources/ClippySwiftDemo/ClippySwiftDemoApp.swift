@@ -1,4 +1,4 @@
-import Assistants
+import ClippySwift
 import AppKit
 import SwiftUI
 
@@ -231,12 +231,12 @@ private final class DemoAppDelegate: NSObject, NSApplicationDelegate {
 }
 
 @main
-private struct AssistantsDemoApp: App {
+private struct ClippySwiftDemoApp: App {
     @NSApplicationDelegateAdaptor(DemoAppDelegate.self) private var appDelegate
     @StateObject private var viewModel = DemoViewModel()
 
     var body: some Scene {
-        WindowGroup("Assistants Demo") {
+        WindowGroup("ClippySwift Demo") {
             ContentView(viewModel: viewModel)
         }
         .defaultSize(width: 320, height: 500)

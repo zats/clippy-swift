@@ -35,7 +35,7 @@ public enum AssistantCharacter: String, CaseIterable, Sendable {
 
     public func manifestURL(in bundle: Bundle) throws -> URL {
         guard let url = bundle.url(forResource: "manifest", withExtension: "json", subdirectory: resourceDirectory) else {
-            throw AssistantsError.ioFailed("Missing bundled manifest for \(displayName).")
+            throw ClippySwiftError.ioFailed("Missing bundled manifest for \(displayName).")
         }
         return url
     }

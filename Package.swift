@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "Assistants",
+    name: "ClippySwift",
     platforms: [
         .iOS(.v16),
         .macOS(.v13),
@@ -12,28 +12,28 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "Assistants",
-            targets: ["Assistants"]
+            name: "ClippySwift",
+            targets: ["ClippySwift"]
         ),
         .executable(
-            name: "assistants-demo",
-            targets: ["AssistantsDemo"]
+            name: "clippy-swift-demo",
+            targets: ["ClippySwiftDemo"]
         ),
     ],
     targets: [
         .target(
-            name: "Assistants",
+            name: "ClippySwift",
             resources: [
                 .copy("Resources")
             ]
         ),
         .executableTarget(
-            name: "AssistantsDemo",
-            dependencies: ["Assistants"]
+            name: "ClippySwiftDemo",
+            dependencies: ["ClippySwift"]
         ),
         .testTarget(
-            name: "AssistantsTests",
-            dependencies: ["Assistants"]
+            name: "ClippySwiftTests",
+            dependencies: ["ClippySwift"]
         ),
     ]
 )

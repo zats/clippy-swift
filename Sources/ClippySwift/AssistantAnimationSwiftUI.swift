@@ -38,22 +38,22 @@ public final class AssistantAnimation: ObservableObject {
         do {
             try ensureLoaded(character: character)
             guard let framePlayer else {
-                throw AssistantsError.invalidInput("No animation player is loaded.")
+                throw ClippySwiftError.invalidInput("No animation player is loaded.")
             }
             switch character {
             case .clippy:
                 guard let animation = ClippyAnimation(rawValue: animationName) else {
-                    throw AssistantsError.invalidInput("Unknown Clippy animation '\(animationName)'.")
+                    throw ClippySwiftError.invalidInput("Unknown Clippy animation '\(animationName)'.")
                 }
                 try framePlayer.play(animation)
             case .cat:
                 guard let animation = CatAnimation(rawValue: animationName) else {
-                    throw AssistantsError.invalidInput("Unknown Cat animation '\(animationName)'.")
+                    throw ClippySwiftError.invalidInput("Unknown Cat animation '\(animationName)'.")
                 }
                 try framePlayer.play(animation)
             case .rocky:
                 guard let animation = RockyAnimation(rawValue: animationName) else {
-                    throw AssistantsError.invalidInput("Unknown Rocky animation '\(animationName)'.")
+                    throw ClippySwiftError.invalidInput("Unknown Rocky animation '\(animationName)'.")
                 }
                 try framePlayer.play(animation)
             }

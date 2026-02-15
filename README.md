@@ -1,4 +1,4 @@
-# assistants-swift
+# clippy-swift
 
 Prebuilt Office Assistant animations (Clippy, Cat, Rocky) for Swift apps.
 
@@ -7,7 +7,7 @@ You drive a single `AssistantAnimation` model and render it with `AssistantAnima
 ## Example
 
 ```swift
-import Assistants
+import ClippySwift
 import SwiftUI
 
 struct DemoView: View {
@@ -46,10 +46,10 @@ assistant.play(RockyAnimation.getAttention)
 
 SPM repo URL:
 
-`https://github.com/zats/assistants-swift`
+`https://github.com/zats/clippy-swift`
 
 ```swift
-.package(url: "https://github.com/zats/assistants-swift", from: "0.1.0")
+.package(url: "https://github.com/zats/clippy-swift", from: "0.1.0")
 ```
 
-Then depend on product `Assistants`.
+Then depend on product `ClippySwift`.

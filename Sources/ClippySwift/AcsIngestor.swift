@@ -43,7 +43,7 @@ public enum AcsIngestor {
         do {
             data = try Data(contentsOf: acsURL)
         } catch {
-            throw AssistantsError.ioFailed("Unable to read ACS file at \(acsURL.path): \(error.localizedDescription)")
+            throw ClippySwiftError.ioFailed("Unable to read ACS file at \(acsURL.path): \(error.localizedDescription)")
         }
 
         let parsed = try AcsParser.parse(data: data)
@@ -61,7 +61,7 @@ public enum AcsIngestor {
         let frameCanvas = parsed.canvasSize
         let totalFrameCount = parsed.animations.reduce(0) { $0 + $1.frames.count }
         guard totalFrameCount > 0 else {
-            throw AssistantsError.emptyFrames
+            throw ClippySwiftError.emptyFrames
         }
         let atlasLayout = try makeAtlasLayout(
             totalFrames: totalFrameCount,
@@ -149,7 +149,7 @@ public enum AcsIngestor {
         try AssistantManifestIO.save(manifest, to: manifestURL)
         return AcsIngestResult(manifestURL: manifestURL, framesDirectory: framesDirectory, manifest: manifest)
         #else
-        throw AssistantsError.unsupportedPlatform("ACS ingest requires CoreGraphics and ImageIO.")
+        throw ClippySwiftError.unsupportedPlatform("ACS ingest requires CoreGraphics and ImageIO.")
         #endif
     }
 }
@@ -212,7 +212,7 @@ private enum AcsParser {
         var reader = DataReader(data: data)
         let signature = try reader.readUInt32()
         guard signature == acsSignature else {
-            throw AssistantsError.invalidInput(
+            throw ClippySwiftError.invalidInput(
                 "Unsupported ACS signature 0x\(String(signature, radix: 16, uppercase: true)). " +
                     "Only Agent 2.0 ACS (0xABCDABC3) is currently supported."
             )
@@ -226,7 +226,7 @@ private enum AcsParser {
             blocks.append(BlockDef(offset: offset, size: size))
         }
         guard blocks.count == 4 else {
-            throw AssistantsError.decodeFailed("Invalid ACS block definition table.")
+            throw ClippySwiftError.decodeFailed("Invalid ACS block definition table.")
         }
 
         let header = try parseHeader(data: data, block: blocks[0])
@@ -237,7 +237,7 @@ private enum AcsParser {
             do {
                 return try parseImage(data: data, offset: ref.offset, size: ref.size, imageIndex: index)
             } catch {
-                throw AssistantsError.decodeFailed("Failed to decode ACS image #\(index): \(error.localizedDescription)")
+                throw ClippySwiftError.decodeFailed("Failed to decode ACS image #\(index): \(error.localizedDescription)")
             }
         }
 
@@ -459,7 +459,7 @@ private func parseImage(data: Data, offset: Int, size: Int, imageIndex: Int) thr
     let payload = try reader.readBytes(count: byteCount)
 
     guard width > 0, height > 0 else {
-        throw AssistantsError.decodeFailed("Image #\(imageIndex) has invalid dimensions \(width)x\(height).")
+        throw ClippySwiftError.decodeFailed("Image #\(imageIndex) has invalid dimensions \(width)x\(height).")
     }
 
     let stride = ((width + 3) / 4) * 4
@@ -468,12 +468,12 @@ private func parseImage(data: Data, offset: Int, size: Int, imageIndex: Int) thr
 
     if compressed {
         guard let decoded = decodeAcsData(payload, targetSize: pixelCount) else {
-            throw AssistantsError.decodeFailed("Image #\(imageIndex) compressed payload failed to decode.")
+            throw ClippySwiftError.decodeFailed("Image #\(imageIndex) compressed payload failed to decode.")
         }
         pixels = decoded
     } else {
         guard payload.count >= pixelCount else {
-            throw AssistantsError.decodeFailed(
+            throw ClippySwiftError.decodeFailed(
                 "Image #\(imageIndex) payload is truncated: expected \(pixelCount), got \(payload.count)."
             )
         }
@@ -532,7 +532,7 @@ private func compositeFrame(
 
 private func makeAtlasLayout(totalFrames: Int, frameSize: IntSize, maxDimension: Int) throws -> AtlasLayout {
     guard frameSize.width > 0, frameSize.height > 0 else {
-        throw AssistantsError.invalidInput("Invalid frame canvas \(frameSize.width)x\(frameSize.height).")
+        throw ClippySwiftError.invalidInput("Invalid frame canvas \(frameSize.width)x\(frameSize.height).")
     }
 
     let maxColumns = max(1, maxDimension / frameSize.width)
@@ -542,7 +542,7 @@ private func makeAtlasLayout(totalFrames: Int, frameSize: IntSize, maxDimension:
     let atlasWidth = columns * frameSize.width
     let atlasHeight = rows * frameSize.height
     guard atlasWidth <= maxDimension, atlasHeight <= maxDimension else {
-        throw AssistantsError.invalidInput(
+        throw ClippySwiftError.invalidInput(
             "Atlas dimensions exceed \(maxDimension)x\(maxDimension). Reduce frame count or split assets."
         )
     }
@@ -603,7 +603,7 @@ private func writePNG(rgba: [UInt8], width: Int, height: Int, to url: URL) throw
     let bytesPerRow = width * 4
     let data = Data(rgba)
     guard let provider = CGDataProvider(data: data as CFData) else {
-        throw AssistantsError.encodeFailed("Unable to allocate image data provider.")
+        throw ClippySwiftError.encodeFailed("Unable to allocate image data provider.")
     }
 
     let bitmapInfo = CGBitmapInfo.byteOrder32Big.union(.init(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue))
@@ -620,16 +620,16 @@ private func writePNG(rgba: [UInt8], width: Int, height: Int, to url: URL) throw
         shouldInterpolate: false,
         intent: .defaultIntent
     ) else {
-        throw AssistantsError.encodeFailed("Unable to create CGImage.")
+        throw ClippySwiftError.encodeFailed("Unable to create CGImage.")
     }
 
     let pngType = "public.png" as CFString
     guard let destination = CGImageDestinationCreateWithURL(url as CFURL, pngType, 1, nil) else {
-        throw AssistantsError.encodeFailed("Unable to create PNG destination at \(url.path).")
+        throw ClippySwiftError.encodeFailed("Unable to create PNG destination at \(url.path).")
     }
     CGImageDestinationAddImage(destination, image, nil)
     if !CGImageDestinationFinalize(destination) {
-        throw AssistantsError.encodeFailed("Unable to finalize PNG at \(url.path).")
+        throw ClippySwiftError.encodeFailed("Unable to finalize PNG at \(url.path).")
     }
 }
 #endif
@@ -794,7 +794,7 @@ private struct DataReader {
 
     init(data: Data, rangeOffset: Int, rangeLength: Int) throws {
         guard rangeOffset >= 0, rangeLength >= 0, rangeOffset + rangeLength <= data.count else {
-            throw AssistantsError.decodeFailed("Invalid data range offset \(rangeOffset), length \(rangeLength).")
+            throw ClippySwiftError.decodeFailed("Invalid data range offset \(rangeOffset), length \(rangeLength).")
         }
         self.data = data
         self.start = rangeOffset
@@ -834,7 +834,7 @@ private struct DataReader {
 
     mutating func readUTF16String(length: Int) throws -> String {
         guard length >= 0 else {
-            throw AssistantsError.decodeFailed("Negative UTF-16 string length \(length).")
+            throw ClippySwiftError.decodeFailed("Negative UTF-16 string length \(length).")
         }
         let byteCount = length * 2
         let range = try take(count: byteCount)
@@ -860,10 +860,10 @@ private struct DataReader {
 
     mutating func take(count: Int) throws -> Range<Int> {
         guard count >= 0 else {
-            throw AssistantsError.decodeFailed("Negative read count \(count).")
+            throw ClippySwiftError.decodeFailed("Negative read count \(count).")
         }
         guard offset + count <= end else {
-            throw AssistantsError.decodeFailed(
+            throw ClippySwiftError.decodeFailed(
                 "Unexpected end of data while reading \(count) bytes at offset \(offset - start)."
             )
         }
