@@ -168,7 +168,7 @@ public struct AssistantAnimationPlayer: View {
     private var playbackSpeedValue: Double = 1
     private var pixelScaleValue: CGFloat = 1
     private var isPlayingValue: Bool = true
-    private var checkerSize: CGFloat = 8
+    private var checkerSize: CGFloat = 0
     private var playsOnceValue: Bool = false
     private var loopDelayValue: TimeInterval = 0
     private let timer = Timer.publish(every: 1.0 / 60.0, on: .main, in: .common).autoconnect()
@@ -197,7 +197,7 @@ public struct AssistantAnimationPlayer: View {
 
     public func checkerSize(_ value: CGFloat) -> Self {
         var copy = self
-        copy.checkerSize = max(1, value)
+        copy.checkerSize = max(0, value)
         return copy
     }
 
@@ -232,7 +232,9 @@ public struct AssistantAnimationPlayer: View {
         let canvasHeight = CGFloat(animation.canvasSize.height) * pixelScaleValue
 
         ZStack(alignment: .topLeading) {
-            CheckerboardBackground(squareSize: checkerSize)
+            if checkerSize > 0 {
+                CheckerboardBackground(squareSize: checkerSize)
+            }
             if let image = animation.currentImage, let frame = animation.currentFrame {
                 Image(decorative: image, scale: 1)
                     .interpolation(.none)

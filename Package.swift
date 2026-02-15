@@ -29,7 +29,10 @@ let package = Package(
         ),
         .executableTarget(
             name: "ClippySwiftDemo",
-            dependencies: ["ClippySwift"]
+            dependencies: ["ClippySwift"],
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "ClippySwiftTests",
